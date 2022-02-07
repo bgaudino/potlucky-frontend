@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Container, TextField, Typography } from "@mui/material";
+import { Button, Container, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 export default function Home() {
@@ -20,9 +20,6 @@ export default function Home() {
       }}
     >
       <div>
-        <Typography component="h1" variant="h5" mb={1}>
-          Create a Potluck
-        </Typography>
         <Button
           variant="contained"
           color="primary"
@@ -30,15 +27,13 @@ export default function Home() {
           fullWidth
           onClick={() => navigate("/create")}
         >
-          Create
+          Create a Potluck
         </Button>
       </div>
       <div>
-        <Typography component="h1" variant="h5" mb={1}>
-          Find a Potluck
-        </Typography>
         <form onSubmit={handleSubmit}>
           <TextField
+            variant="standard"
             label="Potluck Code"
             fullWidth
             value={code}
@@ -53,7 +48,7 @@ export default function Home() {
             disabled={!code}
             type="submit"
           >
-            Find
+            Find a Potluck
           </Button>
         </form>
       </div>

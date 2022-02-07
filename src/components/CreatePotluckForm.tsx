@@ -50,7 +50,7 @@ export default function CreatePotluckForm() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <TextField
+      <TextField variant="standard"
         label="Event Name"
         fullWidth
         type="text"
@@ -59,7 +59,7 @@ export default function CreatePotluckForm() {
         onChange={handleChange}
         sx={{ mt: 2 }}
       />
-      <TextField
+      <TextField variant="standard"
         label="Time and Date"
         fullWidth
         type="datetime-local"
@@ -68,7 +68,7 @@ export default function CreatePotluckForm() {
         value={date}
         sx={{ mt: 2 }}
       />
-      <TextField
+      <TextField variant="standard"
         label="Location"
         fullWidth
         type="text"
@@ -77,7 +77,7 @@ export default function CreatePotluckForm() {
         value={location}
         sx={{ mt: 2 }}
       />
-      <TextField
+      <TextField variant="standard"
         label="Description"
         fullWidth
         type="textarea"
@@ -86,7 +86,7 @@ export default function CreatePotluckForm() {
         value={description}
         sx={{ mt: 2 }}
       />
-      <TextField
+      <TextField variant="standard"
         label="Host"
         fullWidth
         type="text"
@@ -95,7 +95,7 @@ export default function CreatePotluckForm() {
         value={host.name}
         sx={{ mt: 2 }}
       />
-      <TextField
+      <TextField variant="standard"
         label="Email"
         fullWidth
         type="text"

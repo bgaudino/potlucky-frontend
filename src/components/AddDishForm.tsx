@@ -1,7 +1,10 @@
 import {
   Button,
+  Checkbox,
   Dialog,
   FormControl,
+  FormGroup,
+  FormControlLabel,
   InputLabel,
   MenuItem,
   Select,
@@ -10,6 +13,7 @@ import {
 import React, { useState } from "react";
 import { Dish } from "../types";
 import { addDish } from "../utils/api";
+import { categories } from "../utils/food";
 
 interface AddDishFormProps {
   potluckId: string;
@@ -82,15 +86,23 @@ export default function AddDishForm({
               }
               sx={{ mb: 2 }}
             >
-              {["Appetizer", "Main Course", "Dessert"].map(
-                (category: string) => (
-                  <MenuItem key={category} value={category}>
-                    {category}
-                  </MenuItem>
-                )
-              )}
+              {categories.map((category: string) => (
+                <MenuItem
+                  key={category}
+                  value={category}
+                  sx={{
+                    textTransform: "capitalize",
+                  }}
+                >
+                  {category}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
+          <FormGroup sx={{ display: "flex", mb: 2 }}>
+            <FormControlLabel control={<Checkbox />} label="Vegetarian" />
+            <FormControlLabel control={<Checkbox />} label="Vegan" />
+          </FormGroup>
           <TextField
             label="Name"
             variant="standard"
@@ -125,6 +137,7 @@ export default function AddDishForm({
             variant="contained"
             color="primary"
             type="submit"
+            fullWidth
             disabled={!name}
             sx={{
               mb: 2,
@@ -136,6 +149,7 @@ export default function AddDishForm({
           <Button
             variant="contained"
             color="error"
+            fullWidth
             onClick={() => showForm(false)}
           >
             Cancel

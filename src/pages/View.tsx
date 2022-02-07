@@ -3,8 +3,10 @@ import { useParams } from "react-router-dom";
 import { getPotluck } from "../utils/api";
 import AddDishForm from "../components/AddDishForm";
 import { Dish, Potluck } from "../types";
+import { categoryColorMap } from "../utils/food";
 import PotluckInfo from "../components/PotluckInfo";
-import { Button } from "@mui/material";
+import { Chip, Fab } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 
 export default function View() {
   const [potluck, setPotluck] = useState<Potluck | null>(null);
@@ -14,6 +16,21 @@ export default function View() {
   const [showAddDishForm, setShowAddDishForm] = useState(false);
 
   const { id } = useParams();
+
+  function getColor(category: string) {
+    switch (category) {
+      case "main":
+        return "primary";
+      case "side":
+        return "secondary";
+      case "dessert":
+        return "info";
+      case "beverage":
+        return "error";
+      default:
+        return "default";
+    }
+  }
 
   useEffect(() => {
     getPotluck(id || "")
@@ -30,12 +47,44 @@ export default function View() {
       {loading ? null : (
         <>
           {potluck && <PotluckInfo potluck={potluck} />}
-          <h3>Dishes</h3>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <h3>Dishes</h3>
+            <Fab
+              color="primary"
+              size="small"
+              onClick={() => setShowAddDishForm((prevState) => !prevState)}
+              sx={{
+                margin: "0 1rem",
+                display: "flex",
+              }}
+            >
+              <AddIcon />
+            </Fab>
+          </div>
           {dishes.length ? (
             <ul>
               {dishes.map((dish) => (
-                <li key={dish._id}>
+                <li
+                  key={dish._id}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    minHeight: "2rem",
+                  }}
+                >
                   {dish?.attendee?.name} is bringing {dish?.name}
+                  {dish?.category && (
+                    <Chip
+                      label={dish?.category}
+                      sx={{ ml: 1 }}
+                      color={getColor(dish?.category)}
+                    />
+                  )}
                 </li>
               ))}
             </ul>
@@ -49,14 +98,6 @@ export default function View() {
               showForm={setShowAddDishForm}
             />
           )}
-          <Button
-            variant="contained"
-            color="primary"
-            fullWidth
-            onClick={() => setShowAddDishForm((prevState) => !prevState)}
-          >
-            Add a dish
-          </Button>
         </>
       )}
     </div>

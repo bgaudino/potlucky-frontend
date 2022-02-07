@@ -1,4 +1,4 @@
-import { AppBar, Container, Typography } from "@mui/material";
+import { AppBar, Container } from "@mui/material";
 import { Link } from "react-router-dom";
 
 export default function Header() {
@@ -6,9 +6,7 @@ export default function Header() {
     <AppBar color="primary" position="static">
       <Container maxWidth="lg">
         <Link to="/">
-          <Typography component="h1" variant="h6" mb={2} mt={2} color="white">
-            🍯 Potlucky
-          </Typography>
+          <h3 style={{ color: "white" }}>🍯 Potlucky</h3>
         </Link>
       </Container>
     </AppBar>
