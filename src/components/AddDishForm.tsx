@@ -1,4 +1,12 @@
-import { Button, Dialog } from "@mui/material";
+import {
+  Button,
+  Dialog,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
 import React, { useState } from "react";
 import { Dish } from "../types";
 import { addDish } from "../utils/api";
@@ -17,6 +25,7 @@ export default function AddDishForm({
   const [formData, setFormData] = useState<Dish>({
     name: "",
     description: "",
+    category: "",
     attendee: {
       name: localStorage.getItem("name") || "",
       email: localStorage.getItem("email") || "",
@@ -51,45 +60,67 @@ export default function AddDishForm({
         }}
       >
         <form onSubmit={handleSubmit}>
-          <label>
-            Dish:
-            <input
-              type="text"
-              name="name"
-              value={name}
+          <TextField
+            label="Dish Name"
+            type="text"
+            fullWidth
+            variant="standard"
+            name="name"
+            value={name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            sx={{ mb: 2 }}
+          />
+          <FormControl fullWidth variant="standard">
+            <InputLabel id="category-label">Category</InputLabel>
+            <Select
+              labelId="category-label"
+              fullWidth
+              variant="standard"
+              value={formData.category}
               onChange={(e) =>
-                setFormData({ ...formData, name: e.target.value })
+                setFormData({ ...formData, category: e.target.value })
               }
-            />
-          </label>
-          <label>
-            Attendee Name:
-            <input
-              type="text"
-              name="name"
-              value={attendee.name}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  attendee: { ...attendee, name: e.target.value },
-                })
-              }
-            />
-          </label>
-          <label>
-            Attendee Email:
-            <input
-              type="email"
-              name="email"
-              value={attendee.email}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  attendee: { ...attendee, email: e.target.value },
-                })
-              }
-            />
-          </label>
+              sx={{ mb: 2 }}
+            >
+              {["Appetizer", "Main Course", "Dessert"].map(
+                (category: string) => (
+                  <MenuItem key={category} value={category}>
+                    {category}
+                  </MenuItem>
+                )
+              )}
+            </Select>
+          </FormControl>
+          <TextField
+            label="Name"
+            variant="standard"
+            fullWidth
+            type="text"
+            name="name"
+            value={attendee.name}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                attendee: { ...attendee, name: e.target.value },
+              })
+            }
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            label="Email"
+            variant="standard"
+            fullWidth
+            type="email"
+            name="email"
+            value={attendee.email}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                attendee: { ...attendee, email: e.target.value },
+              })
+            }
+            sx={{ mb: 2 }}
+          />
           <Button
             variant="contained"
             color="primary"

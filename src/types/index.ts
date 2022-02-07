@@ -11,6 +11,7 @@ export interface Dish {
   _id?: string;
   name: string;
   description: string;
+  category: string;
   attendee: User
   potluck_id: string;
 }
