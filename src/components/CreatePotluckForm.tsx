@@ -4,6 +4,7 @@ import { createEvent } from "../utils/api";
 import { getCurrentDatetime } from "../utils/datetime";
 import { useNavigate } from "react-router-dom";
 import { Button, TextField } from "@mui/material";
+import { isEmail } from "../utils/validation";
 
 const initialFormData: Potluck = {
   name: "",
@@ -20,6 +21,13 @@ export default function CreatePotluckForm() {
   const [formData, setFormData] = useState<Potluck>(initialFormData);
   const { name, description, location, date, host } = formData;
   const navigate = useNavigate();
+
+  const isDisabled = () => {
+    if (!name) return true;
+    if (!date) return true;
+    if (host.email && !isEmail(host.email)) return true;
+    return false;
+  };
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setFormData({
@@ -50,25 +58,31 @@ export default function CreatePotluckForm() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <TextField variant="standard"
+      <TextField
+        variant="outlined"
         label="Event Name"
         fullWidth
+        helperText={!name ? "Required" : ""}
         type="text"
         name="name"
         value={name}
         onChange={handleChange}
         sx={{ mt: 2 }}
+        autoFocus
       />
-      <TextField variant="standard"
+      <TextField
+        variant="outlined"
         label="Time and Date"
         fullWidth
         type="datetime-local"
         name="date"
+        helperText={!date ? "Valid Date and TimeRequired" : ""}
         onChange={handleChange}
         value={date}
         sx={{ mt: 2 }}
       />
-      <TextField variant="standard"
+      <TextField
+        variant="outlined"
         label="Location"
         fullWidth
         type="text"
@@ -77,7 +91,8 @@ export default function CreatePotluckForm() {
         value={location}
         sx={{ mt: 2 }}
       />
-      <TextField variant="standard"
+      <TextField
+        variant="outlined"
         label="Description"
         fullWidth
         type="textarea"
@@ -86,25 +101,38 @@ export default function CreatePotluckForm() {
         value={description}
         sx={{ mt: 2 }}
       />
-      <TextField variant="standard"
+      <TextField
+        variant="outlined"
         label="Host"
         fullWidth
         type="text"
         name="name"
         onChange={handleHostChange}
+        helperText={!host.name ? "Required" : ""}
         value={host.name}
         sx={{ mt: 2 }}
       />
-      <TextField variant="standard"
+      <TextField
+        variant="outlined"
         label="Email"
         fullWidth
-        type="text"
+        type="email"
         name="email"
         onChange={handleHostChange}
         value={host.email}
+        helperText={
+          host.email && !isEmail(host.email) ? "Invalid Email" : ""
+        }
         sx={{ mt: 2 }}
       />
-      <Button variant="contained" color="primary" type="submit" sx={{ mt: 2 }}>
+      <Button
+        fullWidth
+        variant="contained"
+        color="primary"
+        type="submit"
+        sx={{ mt: 2 }}
+        disabled={isDisabled()}
+      >
         Create
       </Button>
     </form>

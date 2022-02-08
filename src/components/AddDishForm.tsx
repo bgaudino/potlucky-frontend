@@ -19,12 +19,14 @@ interface AddDishFormProps {
   potluckId: string;
   setDishes: React.Dispatch<React.SetStateAction<Dish[]>>;
   showForm: React.Dispatch<React.SetStateAction<boolean>>;
+  takenDishes: string[];
 }
 
 export default function AddDishForm({
   potluckId,
   setDishes,
   showForm,
+  takenDishes,
 }: AddDishFormProps) {
   const [formData, setFormData] = useState<Dish>({
     name: "",
@@ -37,10 +39,10 @@ export default function AddDishForm({
     potluck_id: potluckId,
   });
   const { name, attendee } = formData;
+  const isTaken = takenDishes.includes(name.toLowerCase().trim());
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    console.log(formData);
     addDish(formData)
       .then((data) => {
         setDishes((prevState) => [...prevState, data]);
@@ -67,10 +69,18 @@ export default function AddDishForm({
           <TextField
             label="Dish Name"
             type="text"
+            error={isTaken}
             fullWidth
             variant="standard"
             name="name"
             value={name}
+            helperText={
+              !name
+                ? "Required"
+                : isTaken
+                ? "Someone else has already added this dish"
+                : ""
+            }
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             sx={{ mb: 2 }}
           />
@@ -109,6 +119,8 @@ export default function AddDishForm({
             fullWidth
             type="text"
             name="name"
+            error={!attendee.name}
+            helperText={!attendee.name ? "Required" : ""}
             value={attendee.name}
             onChange={(e) =>
               setFormData({
@@ -138,7 +150,7 @@ export default function AddDishForm({
             color="primary"
             type="submit"
             fullWidth
-            disabled={!name}
+            disabled={!name || takenDishes.includes(name.toLowerCase().trim())}
             sx={{
               mb: 2,
               mt: 2,

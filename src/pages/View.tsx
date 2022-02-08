@@ -3,10 +3,11 @@ import { useParams } from "react-router-dom";
 import { getPotluck } from "../utils/api";
 import AddDishForm from "../components/AddDishForm";
 import { Dish, Potluck } from "../types";
-import { categoryColorMap } from "../utils/food";
 import PotluckInfo from "../components/PotluckInfo";
-import { Chip, Fab } from "@mui/material";
+import { Chip, Fab, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import { Box } from "@mui/system";
+import { theme } from "../theme/theme";
 
 export default function View() {
   const [potluck, setPotluck] = useState<Potluck | null>(null);
@@ -47,13 +48,10 @@ export default function View() {
       {loading ? null : (
         <>
           {potluck && <PotluckInfo potluck={potluck} />}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <h3>Dishes</h3>
+          <Box mt={2} display="flex" alignItems="center">
+            <Typography component="h2" variant="h5">
+              Dishes
+            </Typography>
             <Fab
               color="primary"
               size="small"
@@ -65,37 +63,51 @@ export default function View() {
             >
               <AddIcon />
             </Fab>
-          </div>
+          </Box>
           {dishes.length ? (
             <ul>
               {dishes.map((dish) => (
-                <li
-                  key={dish._id}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    minHeight: "2rem",
-                  }}
-                >
-                  {dish?.attendee?.name} is bringing {dish?.name}
-                  {dish?.category && (
-                    <Chip
-                      label={dish?.category}
-                      sx={{ ml: 1 }}
-                      color={getColor(dish?.category)}
-                    />
-                  )}
+                <li key={dish._id}>
+                  <Box component="span" display="flex" alignItems="center">
+                    <Typography variant="body1">
+                      <span
+                        style={{
+                          color: theme.palette.primary.main,
+                        }}
+                      >
+                        {dish?.attendee.name}
+                      </span>
+                      &nbsp;is bringing&nbsp;
+                      <span
+                        style={{
+                          color: theme.palette.secondary.main,
+                        }}
+                      >
+                        {dish?.name}
+                      </span>
+                    </Typography>
+                    {dish?.category && (
+                      <Chip
+                        label={dish?.category}
+                        sx={{ ml: 1 }}
+                        color={getColor(dish?.category)}
+                      />
+                    )}
+                  </Box>
                 </li>
               ))}
             </ul>
           ) : (
-            "No dishes yet"
+            <Typography variant="body2" sx={{ mt: 1 }}>
+              No dishes yet!
+            </Typography>
           )}
           {showAddDishForm && (
             <AddDishForm
               potluckId={potluck?._id || ""}
               setDishes={setDishes}
               showForm={setShowAddDishForm}
+              takenDishes={dishes.map((dish) => dish.name.toLowerCase().trim())}
             />
           )}
         </>

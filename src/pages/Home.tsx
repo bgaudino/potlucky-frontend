@@ -33,7 +33,6 @@ export default function Home() {
       <div>
         <form onSubmit={handleSubmit}>
           <TextField
-            variant="standard"
             label="Potluck Code"
             fullWidth
             value={code}

@@ -31,6 +31,21 @@ export async function addDish(formData: Dish) {
     body: JSON.stringify(formData),
   });
   const data = await res.json();
-  console.log(data);
+  return data;
+}
+
+export async function sendEmail(email: string, potluck: Potluck) {
+  const res = await fetch(endpoint("/potlucks/share"), {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      potluckId: potluck._id,
+      sender_name: potluck.host.name,
+      recipient_email: email,
+    }),
+  });
+  const data = await res.json();
   return data;
 }
