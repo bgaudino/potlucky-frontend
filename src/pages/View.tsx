@@ -8,6 +8,7 @@ import { Chip, Fab, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { Box } from "@mui/system";
 import Discussion from "../components/Discussion";
+import Dishes from "../components/Dishes";
 
 export default function View() {
   const [potluck, setPotluck] = useState<Potluck | null>(null);
@@ -17,21 +18,6 @@ export default function View() {
   const [showAddDishForm, setShowAddDishForm] = useState(false);
 
   const { id } = useParams();
-
-  function getColor(category: string) {
-    switch (category) {
-      case "main":
-        return "primary";
-      case "side":
-        return "secondary";
-      case "dessert":
-        return "info";
-      case "beverage":
-        return "error";
-      default:
-        return "default";
-    }
-  }
 
   useEffect(() => {
     getPotluck(id || "")
@@ -64,32 +50,6 @@ export default function View() {
               <AddIcon />
             </Fab>
           </Box>
-          {dishes.length ? (
-            <ul>
-              {dishes.map((dish) => (
-                <li key={dish._id}>
-                  <Box component="span" display="flex" alignItems="center">
-                    <Typography variant="body1">
-                      <span>{dish?.attendee.name}</span>
-                      &nbsp;is bringing&nbsp;
-                      <span>{dish?.name}</span>
-                    </Typography>
-                    {dish?.category && (
-                      <Chip
-                        label={dish?.category}
-                        sx={{ ml: 1 }}
-                        color={getColor(dish?.category)}
-                      />
-                    )}
-                  </Box>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <Typography variant="body2" sx={{ mt: 1 }}>
-              No dishes yet!
-            </Typography>
-          )}
           {showAddDishForm && (
             <AddDishForm
               potluckId={potluck?._id || ""}
@@ -100,10 +60,11 @@ export default function View() {
           )}
         </>
       )}
+      <Dishes dishes={dishes} />
       <Typography variant="h5" sx={{ mt: 4, mb: 0 }}>
         Discussion
       </Typography>
-      <Discussion />
+      <Discussion potluckId={potluck?._id} />
     </div>
   );
 }
