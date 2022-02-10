@@ -7,7 +7,7 @@ import PotluckInfo from "../components/PotluckInfo";
 import { Chip, Fab, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { Box } from "@mui/system";
-import { theme } from "../theme/theme";
+import Discussion from "../components/Discussion";
 
 export default function View() {
   const [potluck, setPotluck] = useState<Potluck | null>(null);
@@ -70,21 +70,9 @@ export default function View() {
                 <li key={dish._id}>
                   <Box component="span" display="flex" alignItems="center">
                     <Typography variant="body1">
-                      <span
-                        style={{
-                          color: theme.palette.primary.main,
-                        }}
-                      >
-                        {dish?.attendee.name}
-                      </span>
+                      <span>{dish?.attendee.name}</span>
                       &nbsp;is bringing&nbsp;
-                      <span
-                        style={{
-                          color: theme.palette.secondary.main,
-                        }}
-                      >
-                        {dish?.name}
-                      </span>
+                      <span>{dish?.name}</span>
                     </Typography>
                     {dish?.category && (
                       <Chip
@@ -112,6 +100,10 @@ export default function View() {
           )}
         </>
       )}
+      <Typography variant="h5" sx={{ mt: 4, mb: 0 }}>
+        Discussion
+      </Typography>
+      <Discussion />
     </div>
   );
 }

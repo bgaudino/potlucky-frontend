@@ -1,12 +1,14 @@
-import { AppBar, Box, Container, Typography } from "@mui/material";
+import { AppBar, Box, Container, IconButton, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { useContext, useState } from "react";
+import UserContext from "../context/userContext";
+import Settings from "./Settings";
 
 export default function Header() {
-  const user = {
-    name: localStorage.getItem("name") || "Guest",
-    email: localStorage.getItem("email"),
-  };
+  const context: any = useContext(UserContext);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const { user } = context;
   return (
     <AppBar color="primary" position="static">
       <Container maxWidth="lg">
@@ -28,10 +30,13 @@ export default function Header() {
               Hello, {user.name}
             </Typography>
             &nbsp;
-            <AccountCircleIcon sx={{ color: "#fff" }} />
+            <IconButton onClick={() => setSettingsOpen(true)}>
+              <AccountCircleIcon sx={{ color: "#fff" }} />
+            </IconButton>
           </Box>
         </Box>
       </Container>
+      <Settings open={settingsOpen} setOpen={setSettingsOpen} />
     </AppBar>
   );
 }

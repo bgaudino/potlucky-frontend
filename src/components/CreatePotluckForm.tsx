@@ -1,23 +1,25 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Potluck } from "../types";
 import { createEvent } from "../utils/api";
 import { getCurrentDatetime } from "../utils/datetime";
 import { useNavigate } from "react-router-dom";
 import { Button, TextField } from "@mui/material";
 import { isEmail } from "../utils/validation";
-
-const initialFormData: Potluck = {
-  name: "",
-  description: "",
-  location: "",
-  date: getCurrentDatetime(),
-  host: {
-    name: localStorage.getItem("name") || "",
-    email: localStorage.getItem("email") || "",
-  },
-};
+import UserContext from "../context/userContext";
 
 export default function CreatePotluckForm() {
+  const context: any = useContext(UserContext);
+  const { user, changeUser } = context;
+  const initialFormData: Potluck = {
+    name: "",
+    description: "",
+    location: "",
+    date: getCurrentDatetime(),
+    host: {
+      name: user.name || "",
+      email: user.email || "",
+    },
+  };
   const [formData, setFormData] = useState<Potluck>(initialFormData);
   const { name, description, location, date, host } = formData;
   const navigate = useNavigate();
@@ -48,8 +50,7 @@ export default function CreatePotluckForm() {
     e.preventDefault();
     try {
       const result = await createEvent(formData);
-      localStorage.setItem("name", result.host.name);
-      localStorage.setItem("email", result.host.email);
+      changeUser(result.host);
       navigate(`/potlucks/${result._id}`);
     } catch (err) {
       console.log(err);
@@ -120,9 +121,7 @@ export default function CreatePotluckForm() {
         name="email"
         onChange={handleHostChange}
         value={host.email}
-        helperText={
-          host.email && !isEmail(host.email) ? "Invalid Email" : ""
-        }
+        helperText={host.email && !isEmail(host.email) ? "Invalid Email" : ""}
         sx={{ mt: 2 }}
       />
       <Button

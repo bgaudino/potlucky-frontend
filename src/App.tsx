@@ -1,23 +1,29 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { ThemeProvider } from "@mui/material";
-import { theme } from "./theme/theme";
-import Home from "./pages/Home";
-import Create from "./pages/Create";
-import View from "./pages/View";
-import Header from "./components/Header";
+import { useState } from "react";
+import { makeTheme, colors } from "./theme/theme";
+import Main from "./Main";
+import ThemeContext from "./context/themeContext";
 
 function App() {
+  const [theme, setTheme] = useState(
+    makeTheme(localStorage.getItem("primaryColor") || colors[0])
+  );
+
+  function handleThemeChange(
+    primaryColor: string,
+    secondaryColor: string | null = null
+  ) {
+    setTheme(makeTheme(primaryColor, secondaryColor));
+  }
+
   return (
-    <ThemeProvider theme={theme}>
-      <BrowserRouter>
-        <Header />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/potlucks/:id" element={<View />} />
-          <Route path="/create" element={<Create />} />
-        </Routes>
-      </BrowserRouter>
-    </ThemeProvider>
+    <ThemeContext.Provider
+      value={{
+        theme: theme,
+        changeTheme: handleThemeChange,
+      }}
+    >
+      <Main />
+    </ThemeContext.Provider>
   );
 }
 

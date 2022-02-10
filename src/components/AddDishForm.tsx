@@ -10,10 +10,11 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Dish } from "../types";
 import { addDish } from "../utils/api";
 import { categories } from "../utils/food";
+import UserContext from "../context/userContext";
 
 interface AddDishFormProps {
   potluckId: string;
@@ -28,13 +29,15 @@ export default function AddDishForm({
   showForm,
   takenDishes,
 }: AddDishFormProps) {
+  const context: any = useContext(UserContext);
+  const { user, changeUser } = context;
   const [formData, setFormData] = useState<Dish>({
     name: "",
     description: "",
     category: "",
     attendee: {
-      name: localStorage.getItem("name") || "",
-      email: localStorage.getItem("email") || "",
+      name: user?.name || "",
+      email: user?.email || "",
     },
     potluck_id: potluckId,
   });
@@ -46,8 +49,7 @@ export default function AddDishForm({
     addDish(formData)
       .then((data) => {
         setDishes((prevState) => [...prevState, data]);
-        localStorage.setItem("name", data.attendee.name);
-        localStorage.setItem("email", data.attendee.email);
+        changeUser(data.attendee);
       })
       .catch((err) => console.log(err))
       .finally(() => {
