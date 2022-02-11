@@ -23,6 +23,19 @@ function getColor(category: string) {
   }
 }
 
+function displayRestrictions(dish: Dish) {
+  const restrictions: string[] = [];
+  if (dish.isVegan) restrictions.push("VV");
+  else {
+    if (dish.isVegetarian) restrictions.push("V");
+    if (dish.isDairyFree) restrictions.push("DF");
+  }
+  if (dish.isGlutenFree) restrictions.push("GF");
+  if (dish.isKosher) restrictions.push("K");
+  if (dish.isHalal) restrictions.push("H");
+  return restrictions;
+}
+
 export default function Dishes(props: { dishes: Dish[]; setDishes: any }) {
   const [showEditForm, setShowEditForm] = useState(false);
   const { dishes, setDishes } = props;
@@ -83,6 +96,14 @@ export default function Dishes(props: { dishes: Dish[]; setDishes: any }) {
                 color={getColor(dish?.category)}
               />
             )}
+            {displayRestrictions(dish).map((restriction: string) => (
+              <Chip
+                key={restriction}
+                label={restriction}
+                sx={{ ml: 1 }}
+                color="primary"
+              />
+            ))}
           </Box>
           {dish?.attendee.name === user?.name && (
             <div>

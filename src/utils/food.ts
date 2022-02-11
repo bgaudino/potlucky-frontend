@@ -4,5 +4,5 @@ export const categoryColorMap = {
   main: "primary",
   side: "secondary",
   dessert: "info",
-  beverage: "success",
-}
+  beverage: "success"
+};

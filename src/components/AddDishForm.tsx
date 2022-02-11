@@ -42,7 +42,13 @@ export default function AddDishForm({
         name: user?.name || "",
         email: user?.email || ""
       },
-      potluck_id: potluckId
+      potluck_id: potluckId,
+      isVegetarian: false,
+      isVegan: false,
+      isGlutenFree: false,
+      isDairyFree: false,
+      isKosher: false,
+      isHalal: false
     }
   );
   const { name, attendee } = formData;
@@ -90,6 +96,23 @@ export default function AddDishForm({
         });
         showForm(false);
       });
+  }
+
+  function handleCheckboxChange(e: any) {
+    const { name, checked } = e.target;
+    if (name === "isVegan" && checked) {
+      setFormData((prevState) => ({
+        ...prevState,
+        isVegan: true,
+        isDairyFree: true,
+        isVegetarian: true
+      }));
+      return;
+    }
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: checked
+    }));
   }
 
   return (
@@ -143,10 +166,6 @@ export default function AddDishForm({
               ))}
             </Select>
           </FormControl>
-          <FormGroup sx={{ display: "flex", mb: 2 }}>
-            <FormControlLabel control={<Checkbox />} label="Vegetarian" />
-            <FormControlLabel control={<Checkbox />} label="Vegan" />
-          </FormGroup>
           <TextField
             label="Name"
             variant="standard"
@@ -179,6 +198,74 @@ export default function AddDishForm({
             }
             sx={{ mb: 2 }}
           />
+          <FormGroup
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "repeat(2, 1fr)",
+              mb: 2
+            }}
+          >
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={formData.isVegetarian}
+                  name="isVegetarian"
+                  onChange={handleCheckboxChange}
+                />
+              }
+              label="Vegetarian"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={formData.isVegan}
+                  name="isVegan"
+                  onChange={handleCheckboxChange}
+                />
+              }
+              label="Vegan"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={formData.isGlutenFree}
+                  name="isGlutenFree"
+                  onChange={handleCheckboxChange}
+                />
+              }
+              label="Gluten Free"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={formData.isDairyFree}
+                  name="isDairyFree"
+                  onChange={handleCheckboxChange}
+                />
+              }
+              label="Dairy Free"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={formData.isKosher}
+                  name="isKosher"
+                  onChange={handleCheckboxChange}
+                />
+              }
+              label="Kosher"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={formData.isHalal}
+                  name="isHalal"
+                  onChange={handleCheckboxChange}
+                />
+              }
+              label="Halal"
+            />
+          </FormGroup>
           <Button
             variant="contained"
             color="primary"

@@ -12,8 +12,14 @@ export interface Dish {
   name: string;
   description: string;
   category: string;
-  attendee: User
+  attendee: User;
   potluck_id: string;
+  isVegetarian?: boolean;
+  isVegan?: boolean;
+  isGlutenFree?: boolean;
+  isDairyFree?: boolean;
+  isKosher?: boolean;
+  isHalal?: boolean;
 }
 
 export interface User {
