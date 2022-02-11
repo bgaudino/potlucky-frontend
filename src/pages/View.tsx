@@ -60,7 +60,7 @@ export default function View() {
           )}
         </>
       )}
-      <Dishes dishes={dishes} />
+      <Dishes dishes={dishes} setDishes={setDishes} />
       <Typography variant="h5" sx={{ mt: 4, mb: 0 }}>
         Discussion
       </Typography>

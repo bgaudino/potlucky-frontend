@@ -1,5 +1,12 @@
-import { Box, Chip, Typography } from "@mui/material";
+import { useState } from "react";
+import { Box, Button, Chip, Typography } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import { Dish } from "../types";
+import { useContext } from "react";
+import UserContext from "../context/userContext";
+import { deleteDish } from "../utils/api";
+import AddDishForm from "./AddDishForm";
 
 function getColor(category: string) {
   switch (category) {
@@ -16,8 +23,29 @@ function getColor(category: string) {
   }
 }
 
-export default function Dishes(props: { dishes: Dish[] }) {
-  const { dishes } = props;
+export default function Dishes(props: { dishes: Dish[]; setDishes: any }) {
+  const [showEditForm, setShowEditForm] = useState(false);
+  const { dishes, setDishes } = props;
+  const context: any = useContext(UserContext);
+  const { user } = context;
+  const [currentDish, setCurrentDish] = useState<Dish | null>(null);
+  const takenDishes = dishes
+    .filter((dish: Dish) => dish !== currentDish)
+    .map((dish: Dish) => dish.name.toLowerCase().trim());
+
+  async function handleDelete(id: string | undefined) {
+    if (!id) return;
+    try {
+      const res = await deleteDish(id);
+      if (res._id === id) {
+        setDishes((prevDishes: Dish[]) =>
+          prevDishes.filter((dish) => dish._id !== id)
+        );
+      }
+    } catch (err) {
+      alert("Error deleting dish");
+    }
+  }
 
   if (!dishes.length)
     return (
@@ -29,13 +57,19 @@ export default function Dishes(props: { dishes: Dish[] }) {
   return (
     <ul>
       {dishes.map((dish: Dish) => (
-      <li key={dish._id}>
+        <li
+          key={dish._id}
+          style={{
+            display: "flex",
+            justifyContent: "space-between"
+          }}
+        >
           <Box component="span" display="flex" alignItems="center">
             <Typography
               variant="body1"
               sx={{
                 padding: 1,
-                fontSize: "1.05rem",
+                fontSize: "1.05rem"
               }}
             >
               <span>{dish?.attendee.name}</span>
@@ -50,8 +84,38 @@ export default function Dishes(props: { dishes: Dish[] }) {
               />
             )}
           </Box>
+          {dish?.attendee.name === user?.name && (
+            <div>
+              <Button
+                size="small"
+                color="info"
+                onClick={() => {
+                  setCurrentDish(dish);
+                  setShowEditForm(true);
+                }}
+              >
+                <EditIcon />
+              </Button>
+              <Button
+                size="small"
+                color="error"
+                onClick={() => handleDelete(dish?._id)}
+              >
+                <DeleteIcon />
+              </Button>
+            </div>
+          )}
         </li>
       ))}
+      {showEditForm && currentDish && (
+        <AddDishForm
+          potluckId={dishes.length > 0 ? dishes[0].potluck_id : ""}
+          setDishes={setDishes}
+          showForm={setShowEditForm}
+          takenDishes={takenDishes}
+          currentDish={currentDish}
+        />
+      )}
     </ul>
   );
 }

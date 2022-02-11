@@ -8,11 +8,11 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  TextField,
+  TextField
 } from "@mui/material";
 import React, { useState, useContext } from "react";
 import { Dish } from "../types";
-import { addDish } from "../utils/api";
+import { addDish, editDish } from "../utils/api";
 import { categories } from "../utils/food";
 import UserContext from "../context/userContext";
 
@@ -21,6 +21,7 @@ interface AddDishFormProps {
   setDishes: React.Dispatch<React.SetStateAction<Dish[]>>;
   showForm: React.Dispatch<React.SetStateAction<boolean>>;
   takenDishes: string[];
+  currentDish?: Dish;
 }
 
 export default function AddDishForm({
@@ -28,23 +29,26 @@ export default function AddDishForm({
   setDishes,
   showForm,
   takenDishes,
+  currentDish
 }: AddDishFormProps) {
   const context: any = useContext(UserContext);
   const { user, changeUser } = context;
-  const [formData, setFormData] = useState<Dish>({
-    name: "",
-    description: "",
-    category: "",
-    attendee: {
-      name: user?.name || "",
-      email: user?.email || "",
-    },
-    potluck_id: potluckId,
-  });
+  const [formData, setFormData] = useState<Dish>(
+    currentDish || {
+      name: "",
+      description: "",
+      category: "",
+      attendee: {
+        name: user?.name || "",
+        email: user?.email || ""
+      },
+      potluck_id: potluckId
+    }
+  );
   const { name, attendee } = formData;
   const isTaken = takenDishes.includes(name.toLowerCase().trim());
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  function handleCreate(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     addDish(formData)
       .then((data) => {
@@ -55,19 +59,47 @@ export default function AddDishForm({
       .finally(() => {
         setFormData({
           ...formData,
-          name: "",
+          name: ""
         });
         showForm(false);
       });
   }
+
+  function handleUpdate(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!currentDish) return;
+    editDish(formData, currentDish?._id || "")
+      .then((data) => {
+        console.log(data);
+        setDishes((prevState) => {
+          const updatedDishes = prevState.map((dish) => {
+            if (dish._id === data._id) {
+              return data;
+            }
+            return dish;
+          });
+          return updatedDishes;
+        });
+        changeUser(data.attendee);
+      })
+      .catch((err) => console.log(err))
+      .finally(() => {
+        setFormData({
+          ...formData,
+          name: ""
+        });
+        showForm(false);
+      });
+  }
+
   return (
     <Dialog open={true} onClose={() => showForm(false)}>
       <div
         style={{
-          padding: 20,
+          padding: 20
         }}
       >
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={currentDish ? handleUpdate : handleCreate}>
           <TextField
             label="Dish Name"
             type="text"
@@ -103,7 +135,7 @@ export default function AddDishForm({
                   key={category}
                   value={category}
                   sx={{
-                    textTransform: "capitalize",
+                    textTransform: "capitalize"
                   }}
                 >
                   {category}
@@ -127,7 +159,7 @@ export default function AddDishForm({
             onChange={(e) =>
               setFormData({
                 ...formData,
-                attendee: { ...attendee, name: e.target.value },
+                attendee: { ...attendee, name: e.target.value }
               })
             }
             sx={{ mb: 2 }}
@@ -142,7 +174,7 @@ export default function AddDishForm({
             onChange={(e) =>
               setFormData({
                 ...formData,
-                attendee: { ...attendee, email: e.target.value },
+                attendee: { ...attendee, email: e.target.value }
               })
             }
             sx={{ mb: 2 }}
@@ -155,7 +187,7 @@ export default function AddDishForm({
             disabled={!name || takenDishes.includes(name.toLowerCase().trim())}
             sx={{
               mb: 2,
-              mt: 2,
+              mt: 2
             }}
           >
             Add Dish
