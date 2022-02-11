@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { Box, Button, Chip, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Chip,
+  Divider,
+  Typography,
+  useMediaQuery
+} from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { Dish } from "../types";
@@ -46,6 +53,8 @@ export default function Dishes(props: { dishes: Dish[]; setDishes: any }) {
     .filter((dish: Dish) => dish !== currentDish)
     .map((dish: Dish) => dish.name.toLowerCase().trim());
 
+  const isMobile = useMediaQuery("(max-width:600px)");
+
   async function handleDelete(id: string | undefined) {
     if (!id) return;
     try {
@@ -73,11 +82,15 @@ export default function Dishes(props: { dishes: Dish[]; setDishes: any }) {
         <li
           key={dish._id}
           style={{
-            display: "flex",
+            display: isMobile ? "block" : "flex",
             justifyContent: "space-between"
           }}
         >
-          <Box component="span" display="flex" alignItems="center">
+          <Box
+            component="span"
+            display={isMobile ? "block" : "flex"}
+            alignItems="center"
+          >
             <Typography
               variant="body1"
               sx={{
@@ -126,6 +139,7 @@ export default function Dishes(props: { dishes: Dish[]; setDishes: any }) {
               </Button>
             </div>
           )}
+          {isMobile && <Divider />}
         </li>
       ))}
       {showEditForm && currentDish && (

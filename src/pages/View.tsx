@@ -4,16 +4,18 @@ import { getPotluck } from "../utils/api";
 import AddDishForm from "../components/AddDishForm";
 import { Dish, Potluck } from "../types";
 import PotluckInfo from "../components/PotluckInfo";
-import { Chip, Fab, Typography } from "@mui/material";
+import { Button, Fab, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { Box } from "@mui/system";
 import Discussion from "../components/Discussion";
 import Dishes from "../components/Dishes";
+import Chart from "../components/Chart";
 
 export default function View() {
   const [potluck, setPotluck] = useState<Potluck | null>(null);
   const [dishes, setDishes] = useState<Dish[] | []>([]);
   const [loading, setLoading] = useState(true);
+  const [showCharts, setShowCharts] = useState(false);
   const [error, setError] = useState(null);
   const [showAddDishForm, setShowAddDishForm] = useState(false);
 
@@ -44,7 +46,7 @@ export default function View() {
               onClick={() => setShowAddDishForm((prevState) => !prevState)}
               sx={{
                 margin: "0 1rem",
-                display: "flex",
+                display: "flex"
               }}
             >
               <AddIcon />
@@ -59,6 +61,15 @@ export default function View() {
             />
           )}
         </>
+      )}
+      <Button onClick={() => setShowCharts(!showCharts)}>
+        {showCharts ? "Hide" : "Show"} Charts
+      </Button>
+      {showCharts && (
+        <Box width="100%" height={200} display="flex" justifyContent="center">
+          <Chart dishes={dishes} dataType="dietary" />
+          <Chart dishes={dishes} dataType="category" />
+        </Box>
       )}
       <Dishes dishes={dishes} setDishes={setDishes} />
       <Typography variant="h5" sx={{ mt: 4, mb: 0 }}>

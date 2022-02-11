@@ -7,6 +7,7 @@ import {
   Typography,
   InputAdornment,
   IconButton,
+  useMediaQuery
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
@@ -22,6 +23,8 @@ export default function PotluckInfo(props: { potluck: Potluck }) {
   const [snackbarText, setSnackbarText] = useState("");
   const [email, setEmail] = useState("");
   const [inviteeList, setInviteeList] = useState<string[]>([]);
+
+  const isMobile = useMediaQuery("(max-width:600px)");
 
   function copyLink() {
     const link = `${window.location.origin}/potlucks/${potluck._id}`;
@@ -84,8 +87,14 @@ export default function PotluckInfo(props: { potluck: Potluck }) {
         Share
       </Typography>
       <Box display="flex" alignItems="center">
-        <form onSubmit={handleSubmit}>
+        <form
+          onSubmit={handleSubmit}
+          style={{
+            width: isMobile ? "100%" : "auto"
+          }}
+        >
           <TextField
+            fullWidth={isMobile}
             label="Email"
             variant="outlined"
             size="small"
@@ -102,7 +111,7 @@ export default function PotluckInfo(props: { potluck: Potluck }) {
                     <SendIcon color="primary" />
                   </IconButton>
                 </InputAdornment>
-              ),
+              )
             }}
           />
         </form>
@@ -112,7 +121,7 @@ export default function PotluckInfo(props: { potluck: Potluck }) {
           onClick={copyLink}
           sx={{ ml: 1 }}
         >
-          Copy Link &nbsp;
+          {!isMobile && <span>Copy Link&nbsp;</span>}
           <ContentCopyIcon />
         </Button>
       </Box>
