@@ -62,14 +62,23 @@ export default function View() {
           )}
         </>
       )}
-      <Button onClick={() => setShowCharts(!showCharts)}>
-        {showCharts ? "Hide" : "Show"} Charts
-      </Button>
-      {showCharts && (
-        <Box width="100%" height={200} display="flex" justifyContent="center">
-          <Chart dishes={dishes} dataType="dietary" />
-          <Chart dishes={dishes} dataType="category" />
-        </Box>
+      {dishes.length > 0 && (
+        <>
+          <Button onClick={() => setShowCharts(!showCharts)}>
+            {showCharts ? "Hide" : "Show"} Charts
+          </Button>
+          {showCharts && (
+            <Box
+              width="100%"
+              height={200}
+              display="flex"
+              justifyContent="center"
+            >
+              <Chart dishes={dishes} dataType="dietary" />
+              <Chart dishes={dishes} dataType="category" />
+            </Box>
+          )}
+        </>
       )}
       <Dishes dishes={dishes} setDishes={setDishes} />
       <Typography variant="h5" sx={{ mt: 4, mb: 0 }}>

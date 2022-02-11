@@ -277,7 +277,7 @@ export default function AddDishForm({
               mt: 2
             }}
           >
-            Add Dish
+            {currentDish ? "Update" : "Create"} Dish
           </Button>
           <Button
             variant="contained"
