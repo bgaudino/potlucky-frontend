@@ -22,7 +22,6 @@ export default function PotluckInfo(props: { potluck: Potluck }) {
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarText, setSnackbarText] = useState("");
   const [email, setEmail] = useState("");
-  const [inviteeList, setInviteeList] = useState<string[]>([]);
 
   const isMobile = useMediaQuery("(max-width:600px)");
 

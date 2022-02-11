@@ -14,21 +14,7 @@ import { useContext } from "react";
 import UserContext from "../context/userContext";
 import { deleteDish } from "../utils/api";
 import AddDishForm from "./AddDishForm";
-
-function getColor(category: string) {
-  switch (category) {
-    case "main":
-      return "primary";
-    case "side":
-      return "secondary";
-    case "dessert":
-      return "info";
-    case "beverage":
-      return "error";
-    default:
-      return "default";
-  }
-}
+import { chipColors } from "../theme/theme";
 
 function displayRestrictions(dish: Dish) {
   const restrictions: string[] = [];
@@ -105,16 +91,22 @@ export default function Dishes(props: { dishes: Dish[]; setDishes: any }) {
             {dish?.category && (
               <Chip
                 label={dish?.category}
-                sx={{ ml: 1 }}
-                color={getColor(dish?.category)}
+                sx={{
+                  ml: 1,
+                  backgroundColor: chipColors[dish?.category],
+                  color: "#fff"
+                }}
               />
             )}
             {displayRestrictions(dish).map((restriction: string) => (
               <Chip
                 key={restriction}
                 label={restriction}
-                sx={{ ml: 1 }}
-                color="primary"
+                sx={{
+                  ml: 1,
+                  backgroundColor: chipColors[restriction],
+                  color: "#fff"
+                }}
               />
             ))}
           </Box>
