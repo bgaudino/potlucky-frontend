@@ -2,24 +2,6 @@ import { Dish } from "../types";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import { colors } from "../theme/theme";
 
-const data01 = [
-  { name: "Group A", value: 400 },
-  { name: "Group B", value: 300 },
-  { name: "Group C", value: 300 },
-  { name: "Group D", value: 200 },
-  { name: "Group E", value: 278 },
-  { name: "Group F", value: 189 }
-];
-
-const data02 = [
-  { name: "Group A", value: 2400 },
-  { name: "Group B", value: 4567 },
-  { name: "Group C", value: 1398 },
-  { name: "Group D", value: 9800 },
-  { name: "Group E", value: 3908 },
-  { name: "Group F", value: 4800 }
-];
-
 export default function Chart(props: { dishes: Dish[]; dataType: string }) {
   const { dishes, dataType } = props;
   const categoryData = () => [
@@ -38,6 +20,10 @@ export default function Chart(props: { dishes: Dish[]; dataType: string }) {
     {
       name: "Beverages",
       value: dishes.filter((d) => d.category === "beverage").length
+    },
+    {
+      name: "No Category",
+      value: dishes.filter((d) => !d.category).length
     }
   ];
   const dietaryData = () => [
