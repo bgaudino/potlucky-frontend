@@ -1,10 +1,34 @@
 import { Dish } from "../types";
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
-import { colors } from "../theme/theme";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  ResponsiveContainer,
+  Legend
+} from "recharts";
 
-export default function Chart(props: { dishes: Dish[]; dataType: string }) {
-  const { dishes, dataType } = props;
-  const categoryData = () => [
+export default function Chart(props: { dishes: Dish[] }) {
+  const { dishes } = props;
+
+  const colors = [
+    "#0088FE", // blue
+    "#00C49F", // green
+    "#FFBB28", // orange
+    "#FF8042", // red
+    "#FF00FF", // purple
+    "#00FFFF", // cyan
+    "#00FF00", // lime
+    "#FF00FF", // magenta
+  ];
+  const renderCustomizedLabel = (data: any) => {
+    const { name, value, x, y, cx } = data;
+    if (value === 0) return null;
+    return name;
+    return <text>{name}</text>;
+  };
+
+  const categoryData = [
     {
       name: "Mains",
       value: dishes.filter((d) => d.category === "main").length
@@ -26,7 +50,7 @@ export default function Chart(props: { dishes: Dish[]; dataType: string }) {
       value: dishes.filter((d) => !d.category).length
     }
   ];
-  const dietaryData = () => [
+  const dietaryData = [
     {
       name: "Vegetarian",
       value: dishes.filter((d) => d.isVegetarian && !d.isVegan).length
@@ -66,19 +90,29 @@ export default function Chart(props: { dishes: Dish[]; dataType: string }) {
     }
   ];
 
-  const data = dataType === "category" ? categoryData() : dietaryData();
-
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <PieChart width={400} height={400}>
+      <PieChart width={400} height={600}>
         <Pie
+          data={categoryData}
           dataKey="value"
-          isAnimationActive={true}
-          data={data}
-          outerRadius={80}
-          fill="#8884d8"
+          cx="50%"
+          cy="50%"
+          outerRadius={60}
         >
-          {data.map((entry, index) => (
+          {dietaryData.map((entry, index) => (
+            <Cell fill={colors[index % colors.length]} />
+          ))}
+        </Pie>
+        <Pie
+          data={dietaryData}
+          dataKey="value"
+          cx="50%"
+          cy="50%"
+          innerRadius={70}
+          outerRadius={90}
+        >
+          {categoryData.map((entry, index) => (
             <Cell fill={colors[index % colors.length]} />
           ))}
         </Pie>

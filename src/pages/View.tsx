@@ -65,7 +65,7 @@ export default function View() {
       {dishes.length > 0 && (
         <>
           <Button onClick={() => setShowCharts(!showCharts)}>
-            {showCharts ? "Hide" : "Show"} Charts
+            {showCharts ? "Hide" : "Show"} Chart
           </Button>
           {showCharts && (
             <Box
@@ -74,8 +74,7 @@ export default function View() {
               display="flex"
               justifyContent="center"
             >
-              <Chart dishes={dishes} dataType="dietary" />
-              <Chart dishes={dishes} dataType="category" />
+              <Chart dishes={dishes} />
             </Box>
           )}
         </>

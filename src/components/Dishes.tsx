@@ -65,16 +65,11 @@ export default function Dishes(props: { dishes: Dish[]; setDishes: any }) {
   return (
     <ul>
       {dishes.map((dish: Dish) => (
-        <li
-          key={dish._id}
-          style={{
-            display: isMobile ? "block" : "flex",
-            justifyContent: "space-between"
-          }}
-        >
+        <li key={dish._id}>
           <Box
             component="span"
-            display={isMobile ? "block" : "flex"}
+            display="flex"
+            justifyContent={isMobile ? "flex-start" : "space-between"}
             alignItems="center"
           >
             <Typography
@@ -88,6 +83,29 @@ export default function Dishes(props: { dishes: Dish[]; setDishes: any }) {
               &nbsp;is bringing&nbsp;
               <span>{dish?.name}</span>
             </Typography>
+            {dish?.attendee.name === user?.name && (
+              <div>
+                <Button
+                  size="small"
+                  color="info"
+                  onClick={() => {
+                    setCurrentDish(dish);
+                    setShowEditForm(true);
+                  }}
+                >
+                  <EditIcon />
+                </Button>
+                <Button
+                  size="small"
+                  color="error"
+                  onClick={() => handleDelete(dish?._id)}
+                >
+                  <DeleteIcon />
+                </Button>
+              </div>
+            )}
+          </Box>
+          <Box display="flex">
             {dish?.category && (
               <Chip
                 label={dish?.category}
@@ -110,28 +128,7 @@ export default function Dishes(props: { dishes: Dish[]; setDishes: any }) {
               />
             ))}
           </Box>
-          {dish?.attendee.name === user?.name && (
-            <div>
-              <Button
-                size="small"
-                color="info"
-                onClick={() => {
-                  setCurrentDish(dish);
-                  setShowEditForm(true);
-                }}
-              >
-                <EditIcon />
-              </Button>
-              <Button
-                size="small"
-                color="error"
-                onClick={() => handleDelete(dish?._id)}
-              >
-                <DeleteIcon />
-              </Button>
-            </div>
-          )}
-          {isMobile && <Divider />}
+          <Divider sx={{ mt: 2 }} />
         </li>
       ))}
       {showEditForm && currentDish && (
