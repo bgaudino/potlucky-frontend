@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { ThemeProvider, createTheme } from "@mui/material";
+import { ThemeProvider } from "@mui/material";
 import Home from "./pages/Home";
 import Create from "./pages/Create";
 import View from "./pages/View";
@@ -11,10 +11,10 @@ import ThemeContext from "./context/themeContext";
 function Main() {
   const [user, setUser] = useState({
     name: localStorage.getItem("name") || "Guest",
-    email: localStorage.getItem("email"),
+    email: localStorage.getItem("email")
   });
 
-  const context:any = useContext(ThemeContext);
+  const context: any = useContext(ThemeContext);
 
   function changeUser(user: { name: string; email: string }) {
     setUser(user);
@@ -27,7 +27,7 @@ function Main() {
       <UserContext.Provider
         value={{
           user,
-          changeUser,
+          changeUser
         }}
       >
         <BrowserRouter>
