@@ -16,7 +16,6 @@ export default function View() {
   const [dishes, setDishes] = useState<Dish[] | []>([]);
   const [loading, setLoading] = useState(true);
   const [showCharts, setShowCharts] = useState(false);
-  const [error, setError] = useState(null);
   const [showAddDishForm, setShowAddDishForm] = useState(false);
 
   const { id } = useParams();
@@ -27,9 +26,9 @@ export default function View() {
         setPotluck(() => data.potluck);
         setDishes(() => data.dishes);
       })
-      .catch(setError)
+      .catch((err) => console.log(err))
       .finally(() => setLoading(false));
-  }, []);
+  }, [id]);
 
   return (
     <div className="container">

@@ -1,12 +1,5 @@
 import { Dish } from "../types";
-import {
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
-  ResponsiveContainer,
-  Legend
-} from "recharts";
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 
 export default function Chart(props: { dishes: Dish[] }) {
   const { dishes } = props;
@@ -19,14 +12,13 @@ export default function Chart(props: { dishes: Dish[] }) {
     "#FF00FF", // purple
     "#00FFFF", // cyan
     "#00FF00", // lime
-    "#FF00FF", // magenta
+    "#FF00FF" // magenta
   ];
-  const renderCustomizedLabel = (data: any) => {
-    const { name, value, x, y, cx } = data;
-    if (value === 0) return null;
-    return name;
-    return <text>{name}</text>;
-  };
+  // const renderCustomizedLabel = (data: any) => {
+  //   const { name, value } = data;
+  //   if (value === 0) return null;
+  //   return name;
+  // };
 
   const categoryData = [
     {
