@@ -1,12 +1,5 @@
 import { useState } from "react";
-import {
-  Box,
-  Button,
-  Chip,
-  Divider,
-  Typography,
-  useMediaQuery
-} from "@mui/material";
+import { Box, Button, Chip, Divider, Typography } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { Dish } from "../types";
@@ -38,8 +31,6 @@ export default function Dishes(props: { dishes: Dish[]; setDishes: any }) {
   const takenDishes = dishes
     .filter((dish: Dish) => dish !== currentDish)
     .map((dish: Dish) => dish.name.toLowerCase().trim());
-
-  const isMobile = useMediaQuery("(max-width:600px)");
 
   async function handleDelete(id: string | undefined) {
     if (!id) return;
