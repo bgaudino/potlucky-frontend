@@ -7,6 +7,7 @@ import Header from "./components/Header";
 import UserContext from "./context/userContext";
 import { useContext, useState } from "react";
 import ThemeContext from "./context/themeContext";
+import Page404 from "./components/Page404";
 
 function Main() {
   const [user, setUser] = useState({
@@ -36,6 +37,7 @@ function Main() {
             <Route path="/" element={<Home />} />
             <Route path="/potlucks/:id" element={<View />} />
             <Route path="/create" element={<Create />} />
+            <Route path="/404" element={<Page404 />} />
           </Routes>
         </BrowserRouter>
       </UserContext.Provider>

@@ -1,4 +1,12 @@
-import { AppBar, Box, Container, IconButton, Typography } from "@mui/material";
+import {
+  AppBar,
+  Avatar,
+  Box,
+  Container,
+  IconButton,
+  Typography,
+  useMediaQuery
+} from "@mui/material";
 import { Link } from "react-router-dom";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useContext, useState } from "react";
@@ -8,6 +16,8 @@ import Settings from "./Settings";
 export default function Header() {
   const context: any = useContext(UserContext);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const isMobile = useMediaQuery("(max-width:600px)");
+
   const { user } = context;
   return (
     <AppBar color="primary" position="static">
@@ -19,20 +29,30 @@ export default function Header() {
               component="h1"
               color="#fff"
               sx={{
-                m: "1rem 0",
+                m: "1rem 0"
               }}
             >
               🍯 Potlucky
             </Typography>
           </Link>
           <Box display="flex" alignItems="center">
-            <Typography component="span" color="#fff">
-              Hello, {user.name}
-            </Typography>
-            &nbsp;
-            <IconButton onClick={() => setSettingsOpen(true)}>
-              <AccountCircleIcon sx={{ color: "#fff" }} />
-            </IconButton>
+            {isMobile ? (
+              <IconButton
+                onClick={() => setSettingsOpen(true)}
+              >
+                <Avatar>{user.name.charAt(0).toUpperCase() || "?"}</Avatar>
+              </IconButton>
+            ) : (
+              <>
+                <Typography component="span" color="#fff">
+                  Hello, {user.name}
+                </Typography>
+                &nbsp;
+                <IconButton onClick={() => setSettingsOpen(true)}>
+                  <AccountCircleIcon sx={{ color: "#fff" }} />
+                </IconButton>
+              </>
+            )}
           </Box>
         </Box>
       </Container>

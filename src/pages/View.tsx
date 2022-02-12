@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getPotluck } from "../utils/api";
 import AddDishForm from "../components/AddDishForm";
 import { Dish, Potluck } from "../types";
@@ -18,6 +18,7 @@ export default function View() {
   const [loading, setLoading] = useState(true);
   const [showCharts, setShowCharts] = useState(false);
   const [showAddDishForm, setShowAddDishForm] = useState(false);
+  const navigate = useNavigate();
 
   const { id } = useParams();
   const minLoadingTime = 500;
@@ -27,10 +28,17 @@ export default function View() {
     setTimeout(() => (minLoadingTimeElapsed = true), minLoadingTime);
     getPotluck(id || "")
       .then((data) => {
+        if (data.message === "Potluck not found") {
+          navigate("/404");
+          return;
+        }
         setPotluck(() => data.potluck);
         setDishes(() => data.dishes);
       })
-      .catch((err) => console.log(err))
+      .catch((err) => {
+        console.log(err);
+        navigate("/404");
+      })
       .finally(() => {
         if (minLoadingTimeElapsed) {
           setLoading(() => false);
@@ -38,6 +46,7 @@ export default function View() {
           setTimeout(() => setLoading(() => false), minLoadingTime);
         }
       });
+      // eslint-disable-next-line
   }, [id]);
 
   if (loading) return <LoadingScreen />;
