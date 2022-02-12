@@ -69,7 +69,7 @@ export default function Dishes(props: { dishes: Dish[]; setDishes: any }) {
           <Box
             component="span"
             display="flex"
-            justifyContent={isMobile ? "flex-start" : "space-between"}
+            justifyContent="space-between"
             alignItems="center"
           >
             <Typography

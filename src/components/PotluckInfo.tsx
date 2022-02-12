@@ -86,14 +86,11 @@ export default function PotluckInfo(props: { potluck: Potluck }) {
         Share
       </Typography>
       <Box display="flex" alignItems="center">
-        <form
-          onSubmit={handleSubmit}
-          style={{
-            width: isMobile ? "100%" : "auto"
-          }}
-        >
+        <form onSubmit={handleSubmit} style={{
+          flexGrow: 1,
+        }}>
           <TextField
-            fullWidth={isMobile}
+            fullWidth
             label="Email"
             variant="outlined"
             size="small"

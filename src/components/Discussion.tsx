@@ -1,12 +1,13 @@
 import {
   Avatar,
+  Button,
   List,
   ListItem,
   ListItemText,
   ListItemAvatar,
   Typography,
   Divider,
-  TextField,
+  TextField
 } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import UserContext from "../context/userContext";
@@ -77,6 +78,7 @@ export default function Discussion(props: { potluckId: string | undefined }) {
       <form
         onSubmit={(e) => {
           e.preventDefault();
+          if (!comment) return;
           handleSubmit();
         }}
       >
@@ -90,10 +92,24 @@ export default function Discussion(props: { potluckId: string | undefined }) {
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault();
+              if (!comment) return;
               handleSubmit();
             }
           }}
         />
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          disabled={!comment}
+          fullWidth
+          sx={{
+            mt: 2,
+            mb: 4
+          }}
+        >
+          Post Comment
+        </Button>
       </form>
     </List>
   );
