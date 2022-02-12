@@ -7,7 +7,8 @@ import {
   Typography,
   InputAdornment,
   IconButton,
-  useMediaQuery
+  useMediaQuery,
+  CircularProgress
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
@@ -22,6 +23,7 @@ export default function PotluckInfo(props: { potluck: Potluck }) {
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarText, setSnackbarText] = useState("");
   const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const isMobile = useMediaQuery("(max-width:600px)");
 
@@ -34,15 +36,28 @@ export default function PotluckInfo(props: { potluck: Potluck }) {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (!email || !isEmail(email) || loading) return;
+    let minLoadingTimeElapsed = false;
+    setTimeout(() => (minLoadingTimeElapsed = true), 500);
+    setLoading(true);
     try {
       await sendEmail(email, potluck);
       setSnackbarText("Email sent!");
     } catch (err) {
       setSnackbarText("Error sending email");
     } finally {
-      setEmail("");
-      setShowSnackbar(true);
+      if (minLoadingTimeElapsed) {
+        handleEmailSent();
+      } else {
+        setTimeout(handleEmailSent, 500);
+      }
     }
+  }
+
+  function handleEmailSent() {
+    setEmail("");
+    setLoading(false);
+    setShowSnackbar(true);
   }
 
   return (
@@ -86,9 +101,12 @@ export default function PotluckInfo(props: { potluck: Potluck }) {
         Share
       </Typography>
       <Box display="flex" alignItems="center">
-        <form onSubmit={handleSubmit} style={{
-          flexGrow: 1,
-        }}>
+        <form
+          onSubmit={handleSubmit}
+          style={{
+            flexGrow: 1
+          }}
+        >
           <TextField
             fullWidth
             label="Email"
@@ -97,7 +115,9 @@ export default function PotluckInfo(props: { potluck: Potluck }) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             InputProps={{
-              endAdornment: (
+              endAdornment: loading ? (
+                <CircularProgress size={30} sx={{ m: "auto" }} />
+              ) : (
                 <InputAdornment position="end">
                   <IconButton
                     disabled={!email || !isEmail(email)}

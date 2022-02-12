@@ -33,6 +33,7 @@ export default function AddDishForm({
 }: AddDishFormProps) {
   const context: any = useContext(UserContext);
   const { user, changeUser } = context;
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<Dish>(
     currentDish || {
       name: "",
@@ -56,6 +57,8 @@ export default function AddDishForm({
 
   function handleCreate(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (loading) return;
+    setLoading(true);
     addDish(formData)
       .then((data) => {
         setDishes((prevState) => [...prevState, data]);
@@ -68,12 +71,14 @@ export default function AddDishForm({
           name: ""
         });
         showForm(false);
+        setLoading(false);
       });
   }
 
   function handleUpdate(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!currentDish) return;
+    if (!currentDish || loading) return;
+    setLoading(true);
     editDish(formData, currentDish?._id || "")
       .then((data) => {
         console.log(data);
@@ -95,6 +100,7 @@ export default function AddDishForm({
           name: ""
         });
         showForm(false);
+        setLoading(false);
       });
   }
 
@@ -271,7 +277,7 @@ export default function AddDishForm({
             color="primary"
             type="submit"
             fullWidth
-            disabled={!name || takenDishes.includes(name.toLowerCase().trim())}
+            disabled={!name || takenDishes.includes(name.toLowerCase().trim()) || loading}
             sx={{
               mb: 2,
               mt: 2
@@ -284,6 +290,7 @@ export default function AddDishForm({
             color="error"
             fullWidth
             onClick={() => showForm(false)}
+            disabled={loading}
           >
             Cancel
           </Button>

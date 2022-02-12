@@ -10,6 +10,7 @@ import { Box } from "@mui/system";
 import Discussion from "../components/Discussion";
 import Dishes from "../components/Dishes";
 import Chart from "../components/Chart";
+import LoadingScreen from "../components/LoadingScreen";
 
 export default function View() {
   const [potluck, setPotluck] = useState<Potluck | null>(null);
@@ -19,47 +20,54 @@ export default function View() {
   const [showAddDishForm, setShowAddDishForm] = useState(false);
 
   const { id } = useParams();
+  const minLoadingTime = 500;
 
   useEffect(() => {
+    let minLoadingTimeElapsed = false;
+    setTimeout(() => (minLoadingTimeElapsed = true), minLoadingTime);
     getPotluck(id || "")
       .then((data) => {
         setPotluck(() => data.potluck);
         setDishes(() => data.dishes);
       })
       .catch((err) => console.log(err))
-      .finally(() => setLoading(false));
+      .finally(() => {
+        if (minLoadingTimeElapsed) {
+          setLoading(() => false);
+        } else {
+          setTimeout(() => setLoading(() => false), minLoadingTime);
+        }
+      });
   }, [id]);
+
+  if (loading) return <LoadingScreen />;
 
   return (
     <div className="container">
-      {loading ? null : (
-        <>
-          {potluck && <PotluckInfo potluck={potluck} />}
-          <Box mt={2} display="flex" alignItems="center">
-            <Typography component="h2" variant="h5">
-              Dishes
-            </Typography>
-            <Fab
-              color="primary"
-              size="small"
-              onClick={() => setShowAddDishForm((prevState) => !prevState)}
-              sx={{
-                margin: "0 1rem",
-                display: "flex"
-              }}
-            >
-              <AddIcon />
-            </Fab>
-          </Box>
-          {showAddDishForm && (
-            <AddDishForm
-              potluckId={potluck?._id || ""}
-              setDishes={setDishes}
-              showForm={setShowAddDishForm}
-              takenDishes={dishes.map((dish) => dish.name.toLowerCase().trim())}
-            />
-          )}
-        </>
+      {potluck && <PotluckInfo potluck={potluck} />}
+      <Box mt={2} display="flex" alignItems="center">
+        <Typography component="h2" variant="h5">
+          Dishes
+        </Typography>
+        <Fab
+          color="primary"
+          size="small"
+          onClick={() => setShowAddDishForm((prevState) => !prevState)}
+          sx={{
+            margin: "0 1rem",
+            display: "flex"
+          }}
+        >
+          <AddIcon />
+        </Fab>
+      </Box>
+      {showAddDishForm && (
+        <AddDishForm
+          potluckId={potluck?._id || ""}
+          setDishes={setDishes}
+          showForm={setShowAddDishForm}
+          takenDishes={dishes.map((dish) => dish.name.toLowerCase().trim())}
+        />
       )}
       {dishes.length > 0 && (
         <>

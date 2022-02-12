@@ -18,6 +18,7 @@ export default function Discussion(props: { potluckId: string | undefined }) {
   const { potluckId } = props;
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
   const context: any = useContext(UserContext);
   const { user } = context;
 
@@ -29,6 +30,8 @@ export default function Discussion(props: { potluckId: string | undefined }) {
   }, [potluckId]);
 
   async function handleSubmit() {
+    if (loading) return;
+    setLoading(true);
     try {
       const res = await createComment(
         user.name || "Guest",
@@ -42,6 +45,7 @@ export default function Discussion(props: { potluckId: string | undefined }) {
       alert("Something went wrong");
     } finally {
       setComment("");
+      setLoading(false);
     }
   }
 
@@ -101,7 +105,7 @@ export default function Discussion(props: { potluckId: string | undefined }) {
           type="submit"
           variant="contained"
           color="primary"
-          disabled={!comment}
+          disabled={!comment || loading}
           fullWidth
           sx={{
             mt: 2,
