@@ -41,8 +41,8 @@ export default function PotluckInfo(props: { potluck: Potluck }) {
     setTimeout(() => (minLoadingTimeElapsed = true), 500);
     setLoading(true);
     try {
-      await sendEmail(email, potluck);
-      setSnackbarText("Email sent!");
+      const res = await sendEmail(email, potluck);
+      setSnackbarText(res.message || "Email sent");
     } catch (err) {
       setSnackbarText("Error sending email");
     } finally {
